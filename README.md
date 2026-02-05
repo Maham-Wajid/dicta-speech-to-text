@@ -8,6 +8,10 @@ Turn your voice into text instantly. Dicta is a lightweight, browser-based speec
 - Start/stop listening with one click
 - Clear the transcript with a single action
 
+### Live Demo
+
+https://maham-wajid.github.io/dicta-speech-to-text/
+
 ### How to Use
 
 1. Open index.html in a modern browser (Chrome or Edge recommended).
