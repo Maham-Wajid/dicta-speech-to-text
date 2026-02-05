@@ -7,7 +7,7 @@
     <!-- CSS Style Linkage -->
     <link rel="stylesheet" href="style/style.css">
 
-    <title>virtual-assistant</title>
+    <title>Dicta Speech-to-Text</title>
 </head>
 <body>
     <div class="container">
@@ -16,21 +16,29 @@
                 <img src="resources/img/virtual-assistant.gif" alt="virtual-assistant">
             </div>
             <h1 class="main-text">Dicta</h1>
-            <p class="sub-text">Hey! This is your virtual-assistant. How can i assist you?</p>
+            <p class="sub-text">I will assist you with speech-to-text transcription. Just click the microphone and start speaking.</p>
 
             <div class="input">
                 <img src="resources/img/mic.png" alt="microphone" />
-                <p id="content">Try to Speak!</p>
+                <p id="content">Speak</p>
             </div>
         </div>
 
         <div class="output">
             <p id="output-content">
-                output content here!
+                Transcribed text will appear here. Click the microphone and start speaking to see the magic happen!
             </p>
+        </div>
+
+        <div class="controls">
+            <button id="clear-btn" class="clear-btn">Clear</button>
+        </div>
+        
+        <div class="footer">
+            <p>Created by <a href="https://github.com/Maham" target="_blank">Maham Wajid</a></p>
         </div>
     </div>
 
-    <script src="/script/script.js"></script>
+    <script src="script/script.js"></script>
 </body>
 </html>
