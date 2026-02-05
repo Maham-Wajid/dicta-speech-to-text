@@ -12,6 +12,14 @@ Turn your voice into text instantly. Dicta is a lightweight, browser-based speec
 
 https://maham-wajid.github.io/dicta-speech-to-text/
 
+### Screenshot
+
+![Dicta UI](resources/Screenshot%202026-02-06%20at%201.11.01%20AM.png)
+
+### Demo Video
+
+https://github.com/maham-wajid/dicta-speech-to-text/raw/main/resources/dicta-speech-to-text-live-demo.mov
+
 ### How to Use
 
 1. Open index.html in a modern browser (Chrome or Edge recommended).
