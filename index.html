@@ -3,41 +3,174 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- CSS Style Linkage -->
-    <link rel="stylesheet" href="style/style.css">
-
     <title>Dicta Speech-to-Text</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style/style.css">
+    <!-- PDF Export Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
-    <div class="container">
-        <div class="main-content">
-            <div class="ai-gif">
-                <img src="resources/img/virtual-assistant.gif" alt="virtual-assistant">
+    <!-- Header with Theme Toggle -->
+    <header class="app-header">
+        <div class="header-left">
+            <h1 class="app-title">Dicta</h1>
+            <p class="app-subtitle">Speech-to-Text Transcription</p>
+        </div>
+        <div class="header-controls">
+            <!-- Language Selector -->
+            <div class="language-selector">
+                <label for="lang-select" class="sr-only">Select Language</label>
+                <select id="lang-select" class="lang-dropdown" aria-label="Select language for speech recognition">
+                    <option value="en-US">English (US)</option>
+                    <option value="en-GB">English (UK)</option>
+                    <option value="es-ES">Spanish</option>
+                    <option value="fr-FR">French</option>
+                    <option value="de-DE">German</option>
+                    <option value="it-IT">Italian</option>
+                    <option value="pt-BR">Portuguese (Brazil)</option>
+                    <option value="ja-JP">Japanese</option>
+                    <option value="zh-CN">Chinese (Simplified)</option>
+                    <option value="ko-KR">Korean</option>
+                </select>
             </div>
-            <h1 class="main-text">Dicta</h1>
-            <p class="sub-text">I will assist you with speech-to-text transcription. Just click the microphone and start speaking.</p>
+            <!-- Theme Toggle Button -->
+            <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark/light mode">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </header>
 
-            <div class="input">
-                <img src="resources/img/mic.png" alt="microphone" />
-                <p id="content">Speak</p>
+    <!-- Main Container -->
+    <main class="app-container">
+        <!-- Left Panel: Controls -->
+        <section class="control-panel">
+            <div class="card glass-card">
+                <div class="mic-container">
+                    <div class="mic-wrapper" id="mic-button" role="button" tabindex="0" aria-label="Start speaking" aria-pressed="false">
+                        <div class="animated-mic">
+                            <i class="fas fa-microphone"></i>
+                        </div>
+                        <svg class="pulse-ring" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <p id="status-text" class="status-text">Click to start listening</p>
+                </div>
+
+                <!-- State Indicator -->
+                <div class="state-indicator">
+                    <span class="state-dot" id="state-dot"></span>
+                    <span id="state-label" class="state-label">Ready</span>
+                </div>
+
+                <!-- Control Buttons -->
+                <div class="button-group">
+                    <button id="pause-btn" class="btn btn-secondary" aria-label="Pause listening" disabled>
+                        <i class="fas fa-pause"></i>
+                        <span>Pause</span>
+                    </button>
+                    <button id="reset-btn" class="btn btn-danger" aria-label="Reset recording">
+                        <i class="fas fa-redo"></i>
+                        <span>Reset</span>
+                    </button>
+                </div>
+
+                <!-- Continuous Mode Toggle -->
+                <div class="toggle-group">
+                    <label for="continuous-mode" class="toggle-label">Continuous Mode</label>
+                    <button id="continuous-mode" class="toggle-switch" role="switch" aria-checked="false" aria-label="Toggle continuous listening mode">
+                        <span class="toggle-slider"></span>
+                    </button>
+                </div>
+
+                <!-- Statistics -->
+                <div class="stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Words:</span>
+                        <span id="word-count" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Characters:</span>
+                        <span id="char-count" class="stat-value">0</span>
+                    </div>
+                </div>
             </div>
-        </div>
+        </section>
 
-        <div class="output">
-            <p id="output-content">
-                Transcribed text will appear here. Click the microphone and start speaking to see the magic happen!
-            </p>
-        </div>
+        <!-- Right Panel: Output & History -->
+        <section class="output-panel">
+            <!-- Main Output Card -->
+            <div class="card glass-card output-card">
+                <!-- Tabs: Current / History -->
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="current" aria-selected="true">Current</button>
+                    <button class="tab-btn" data-tab="history" aria-selected="false">History</button>
+                </div>
 
-        <div class="controls">
-            <button id="clear-btn" class="clear-btn">Clear</button>
-        </div>
-        
-        <div class="footer">
-            <p>Created by <a href="https://github.com/Maham" target="_blank">Maham Wajid</a></p>
-        </div>
+                <!-- Current Transcription Tab -->
+                <div class="tab-content active" id="current-tab">
+                    <div class="transcription-area">
+                        <p id="output-content" class="placeholder">Transcribed text will appear here. Click the microphone and start speaking.</p>
+                    </div>
+                </div>
+
+                <!-- History Tab -->
+                <div class="tab-content" id="history-tab">
+                    <div class="history-container">
+                        <div id="history-list" class="history-list"></div>
+                        <p id="no-history" class="no-history-msg">No transcriptions yet. Start by clicking the microphone!</p>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button id="copy-btn" class="btn btn-primary" aria-label="Copy transcript to clipboard" disabled>
+                        <i class="fas fa-copy"></i>
+                        <span>Copy</span>
+                    </button>
+                    <button id="download-btn" class="btn btn-primary" aria-label="Download transcript as text file" disabled>
+                        <i class="fas fa-download"></i>
+                        <span>Download TXT</span>
+                    </button>
+                    <button id="pdf-btn" class="btn btn-primary" aria-label="Export transcript as PDF" disabled>
+                        <i class="fas fa-file-pdf"></i>
+                        <span>Export PDF</span>
+                    </button>
+                    <button id="clear-btn" class="btn btn-secondary" aria-label="Clear current transcript">
+                        <i class="fas fa-trash-alt"></i>
+                        <span>Clear</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Keyboard Shortcuts Info -->
+            <div class="shortcuts-info">
+                <details class="shortcuts-details">
+                    <summary>Keyboard Shortcuts</summary>
+                    <ul>
+                        <li><kbd>Space</kbd> - Start/Stop recording</li>
+                        <li><kbd>Ctrl + C</kbd> - Copy transcript</li>
+                        <li><kbd>Ctrl + D</kbd> - Download transcript</li>
+                        <li><kbd>Ctrl + R</kbd> - Reset transcript</li>
+                    </ul>
+                </details>
+            </div>
+        </section>
+    </main>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Unsupported Browser Fallback -->
+    <div id="unsupported-banner" class="unsupported-banner" style="display: none;">
+        <i class="fas fa-exclamation-triangle"></i>
+        <p>Your browser doesn't support the Web Speech API. Please use Chrome, Edge, or Safari.</p>
     </div>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+        <p>Created with ❤️ by <a href="https://github.com/Maham" target="_blank">Maham Wajid</a> and <a href="https://github.com/abdul-wahab619" target="_blank">Abdul Wahab</a></p>
+    </footer>
 
     <script src="script/script.js"></script>
 </body>
